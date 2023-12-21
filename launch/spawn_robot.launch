@@ -1,0 +1,34 @@
+<launch>
+
+    <arg name="x" default="0.0" />
+    <arg name="y" default="0.0" />
+    <arg name="z" default="0.2" />
+
+    <arg name="robot_name" default="mobile_robot" />
+
+    <!-- Cargar el URDF en el servidor de parámetros de ROS -->
+    <param name="robot_description" command="$(find xacro)/xacro $(find robot_tutorial)/robot/mobile_robot.urdf.xacro" />
+
+    <rosparam file="$(find robot_tutorial)/config/robot_control.yaml" command="load"/>
+
+    <!-- Iniciamos robot_state_publisher para publicar las tranformaciones tf -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+        output="screen">
+		<param name="publish_frequency" type="double" value="5.0" />
+    </node>
+
+    <!-- Iniciamos un mundo vacio en gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+    <!-- Cargamos los controladores -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/" args="joint_state_controller"/>
+
+    <!-- Hacer aparecer el robot -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -x $(arg x) -y $(arg y) -z $(arg z)  -model $(arg robot_name) -param robot_description"/>
+
+     <!-- Iniciamos rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_tutorial)/launch/robot.rviz" />
+
+</launch>
