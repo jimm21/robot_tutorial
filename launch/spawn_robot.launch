@@ -3,12 +3,12 @@
     <arg name="x" default="0.0" />
     <arg name="y" default="0.0" />
     <arg name="z" default="0.2" />
-
     <arg name="robot_name" default="mobile_robot" />
 
     <!-- Cargar el URDF en el servidor de parámetros de ROS -->
     <param name="robot_description" command="$(find xacro)/xacro $(find robot_tutorial)/robot/mobile_robot.urdf.xacro" />
 
+    <!-- Cargamos los controladores -->
     <rosparam file="$(find robot_tutorial)/config/robot_control.yaml" command="load"/>
 
     <!-- Iniciamos robot_state_publisher para publicar las tranformaciones tf -->
@@ -20,7 +20,7 @@
     <!-- Iniciamos un mundo vacio en gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
 
-    <!-- Cargamos los controladores -->
+    <!-- Iniciamos los controladores -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
         output="screen" ns="/" args="joint_state_controller"/>
 

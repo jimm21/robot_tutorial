@@ -12,7 +12,7 @@
 		<param name="publish_frequency" type="double" value="5.0" />
     </node>
 
-     <!-- Iniciamos rviz -->
+    <!-- Iniciamos rviz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_tutorial)/launch/robot.rviz" />
 
 </launch>
